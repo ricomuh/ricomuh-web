@@ -6,6 +6,7 @@ import {
   serial,
   text,
   timestamp,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 export const posts = pgTable("posts", {
@@ -32,6 +33,7 @@ export const featuredArticles = pgTable("featured_articles", {
 
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
+  featured: boolean("featured").notNull().default(false),
   title: varchar("title").notNull(),
   slug: varchar("slug").notNull().unique(),
   description: text("description").notNull(),
