@@ -61,6 +61,13 @@ export const messages = pgTable("messages", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const guestbook = pgTable("guestbook", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  message: text("message").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const projectsRelations = relations(projects, ({ many }) => ({
   images: many(projectImages),
 }));
