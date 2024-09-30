@@ -1,6 +1,14 @@
-import { pgTable, varchar, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import {
+  pgTable,
+  integer,
+  varchar,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
-export const postsTable = pgTable("posts", {
+export const posts = pgTable("posts", {
   id: serial("id").primaryKey(),
   title: varchar("title").notNull(),
   slug: varchar("slug").notNull().unique(),
@@ -12,7 +20,7 @@ export const postsTable = pgTable("posts", {
     .$onUpdate(() => new Date()),
 });
 
-export const featuredArticlesTable = pgTable("featured_articles", {
+export const featuredArticles = pgTable("featured_articles", {
   id: serial("id").primaryKey(),
   url: varchar("url").notNull().unique(),
   image: varchar("image").notNull(),
@@ -22,10 +30,37 @@ export const featuredArticlesTable = pgTable("featured_articles", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const messagesTable = pgTable("messages", {
+export const projects = pgTable("projects", {
+  id: serial("id").primaryKey(),
+  title: varchar("title").notNull(),
+  slug: varchar("slug").notNull().unique(),
+  description: text("description").notNull(),
+  url: varchar("url"),
+  github: varchar("github"),
+  image: varchar("image").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
+export const projectImages = pgTable("project_images", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").references(() => projects.id, {
+    onDelete: "cascade",
+  }),
+  image: varchar("image").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const messages = pgTable("messages", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
   email: varchar("email").notNull(),
   message: text("message").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const projectsRelations = relations(projects, ({ many }) => ({
+  images: many(projectImages),
+}));
