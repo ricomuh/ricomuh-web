@@ -1,16 +1,16 @@
 import { relations } from "drizzle-orm";
 import {
   pgTable,
-  integer,
+  // integer,
   varchar,
-  serial,
+  // serial,
   text,
   timestamp,
   boolean,
 } from "drizzle-orm/pg-core";
 
 export const posts = pgTable("posts", {
-  id: serial("id").primaryKey(),
+  id: varchar("uuid").primaryKey(),
   title: varchar("title").notNull(),
   slug: varchar("slug").notNull().unique(),
   content: text("content").notNull(),
@@ -22,7 +22,7 @@ export const posts = pgTable("posts", {
 });
 
 export const featuredArticles = pgTable("featured_articles", {
-  id: serial("id").primaryKey(),
+  id: varchar("uuid").primaryKey(),
   url: varchar("url").notNull().unique(),
   image: varchar("image").notNull(),
   title: varchar("title").notNull(),
@@ -32,7 +32,7 @@ export const featuredArticles = pgTable("featured_articles", {
 });
 
 export const projects = pgTable("projects", {
-  id: serial("id").primaryKey(),
+  id: varchar("uuid").primaryKey(),
   featured: boolean("featured").notNull().default(false),
   title: varchar("title").notNull(),
   slug: varchar("slug").notNull().unique(),
@@ -47,8 +47,11 @@ export const projects = pgTable("projects", {
 });
 
 export const projectImages = pgTable("project_images", {
-  id: serial("id").primaryKey(),
-  projectId: integer("project_id").references(() => projects.id, {
+  id: varchar("uuid").primaryKey(),
+  // projectId: integer("project_id").references(() => projects.id, {
+  //   onDelete: "cascade",
+  // }),
+  projectId: varchar("project_id").references(() => projects.id, {
     onDelete: "cascade",
   }),
   image: varchar("image").notNull(),
@@ -56,7 +59,7 @@ export const projectImages = pgTable("project_images", {
 });
 
 export const messages = pgTable("messages", {
-  id: serial("id").primaryKey(),
+  id: varchar("uuid").primaryKey(),
   name: varchar("name").notNull(),
   email: varchar("email").notNull(),
   message: text("message").notNull(),
@@ -64,7 +67,7 @@ export const messages = pgTable("messages", {
 });
 
 export const guestbook = pgTable("guestbook", {
-  id: serial("id").primaryKey(),
+  id: varchar("uuid").primaryKey(),
   name: varchar("name").notNull(),
   message: text("message").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
